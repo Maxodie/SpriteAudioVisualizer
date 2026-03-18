@@ -1,0 +1,15 @@
+[submodule "PoopTubing/vendors/imgui/imgui"]
+	path = PoopTubing/vendors/imgui/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "PoopTubing/vendors/GLFW/glfw"]
+	path = PoopTubing/vendors/GLFW/glfw
+	url = https://github.com/glfw/glfw
+[submodule "PoopTubing/vendors/glm/glm"]
+	path = PoopTubing/vendors/glm/glm
+	url = https://github.com/g-truc/glm
+[submodule "PoopTubing/vendors/yamlcpp/yaml-cpp"]
+	path = PoopTubing/vendors/yamlcpp/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp
+[submodule "PoopTubing/vendors/stb/stb"]
+	path = PoopTubing/vendors/stb/stb
+	url = https://github.com/nothings/stb

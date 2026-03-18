@@ -1,5 +1,12 @@
+
 # Prerequisites
 *.d
+
+build/
+bin/
+.clangd
+.cache
+imgui.ini
 
 # Compiled Object files
 *.slo
