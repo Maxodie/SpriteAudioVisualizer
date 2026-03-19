@@ -33,6 +33,10 @@ set(
 # Create executable file as project name
 add_library(imgui ${source_list})
 
+target_link_libraries(imgui PRIVATE
+    glfw
+)
+
 set_target_properties(imgui PROPERTIES
     OUTPUT_NAME imgui
     ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}/imgui

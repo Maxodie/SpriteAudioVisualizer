@@ -1,4 +1,5 @@
-if(CONFIG_COMPILE_DEFINITION STREQUAL SR_EDITOR)
+if(CONFIG_COMPILE_DEFINITION STREQUAL PT_EDITOR)
+    message("==== Compile Editor ====")
     add_executable(PoopTubingEditor
         PoopTubingEditor/src/Editor.cpp
     )

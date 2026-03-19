@@ -8,17 +8,22 @@ add_library(PoopTubing
     PoopTubing/src/Core.hpp
 )
 
-target_link_libraries(PoopTubing PUBLIC
+target_link_libraries(PoopTubing PRIVATE
     glfw
     glm_math
-    # imgui
-    StbImplementation
+    imgui
     glad
-    yamlcpp
+    yaml-cpp::yaml-cpp
+    StbImplementation
 )
 
 target_include_directories(PoopTubing PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/GLFW/glfw/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/glad/glad/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/imgui/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/yamlcpp/yaml-cpp/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/stb/stb
 )
 
 set_target_properties(PoopTubing PROPERTIES
