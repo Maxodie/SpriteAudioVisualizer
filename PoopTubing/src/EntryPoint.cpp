@@ -4,4 +4,5 @@ int main()
 {
     PT::Application app;
     StartApplication(app);
+    app.Run();
 }

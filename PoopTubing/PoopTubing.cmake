@@ -1,18 +1,43 @@
 add_library(PoopTubing
+    PoopTubing/vendors/glad/glad/src/glad.c
+
     PoopTubing/src/EntryPoint.hpp
     PoopTubing/src/EntryPoint.cpp
 
-    PoopTubing/src/Application.hpp
-    PoopTubing/src/Application.cpp
+        PoopTubing/src/Application/Application.hpp
+        PoopTubing/src/Application/Application.cpp
+        PoopTubing/src/Application/LayerStack.hpp
+        PoopTubing/src/Application/LayerStack.cpp
+
+        PoopTubing/src/Utils/FileSystem.hpp
+        PoopTubing/src/Utils/FileSystem.cpp
+        PoopTubing/src/Utils/StringHelper.hpp
+
+        PoopTubing/src/Window/Window.cpp
+        PoopTubing/src/Window/Window.hpp
+        PoopTubing/src/Window/GraphicsContext.cpp
+        PoopTubing/src/Window/GraphicsContext.hpp
+
+        PoopTubing/src/Event/Event.hpp
+        PoopTubing/src/Event/WindowEvent.hpp
+
+        PoopTubing/src/Renderer/RendererAPI.cpp
+        PoopTubing/src/Renderer/RendererAPI.hpp
+        PoopTubing/src/Renderer/OpenglGraphicsContext.cpp
+        PoopTubing/src/Renderer/OpenglGraphicsContext.hpp
+        PoopTubing/src/Renderer/Renderer.cpp
+        PoopTubing/src/Renderer/Renderer.hpp
 
     PoopTubing/src/Core.hpp
+
+    PoopTubing/src/Log/Log.hpp
+    PoopTubing/src/Log/Log.cpp
 )
 
 target_link_libraries(PoopTubing PRIVATE
     glfw
     glm_math
     imgui
-    glad
     yaml-cpp::yaml-cpp
     StbImplementation
 )
