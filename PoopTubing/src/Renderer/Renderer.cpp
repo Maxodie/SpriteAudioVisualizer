@@ -1,7 +1,9 @@
 #include "Renderer/Renderer.hpp"
-#include "Log/Log.hpp"
+#include "Renderer/Transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "Renderer/RendererAPI.hpp"
 #include "Renderer/Texture.hpp"
+#include "Application/Application.hpp"
 
 namespace PT
 {
@@ -10,6 +12,7 @@ uint32_t Renderer::s_shaderProgram;
 uint32_t Renderer::s_VBO, Renderer::s_VAO, Renderer::s_EBO;
 uint32_t Renderer::s_vertexShader;
 uint32_t Renderer::s_fragmentShader;
+Camera Renderer::s_camera;
 
 constexpr const  char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
@@ -17,21 +20,24 @@ constexpr const  char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 2) in float aTexID;\n"
     "out vec2 TexCoord;\n"
     "out float TexID;\n"
+    "uniform mat4 uModel;\n"
+    "uniform mat4 uLocal;\n"
+    "uniform mat4 uView;\n"
+    "uniform mat4 uProjection;\n"
     "void main()\n"
     "{\n"
     "   TexCoord = aTexCoord;\n"
     "   TexID = aTexID;\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = uProjection * uView * uModel * uLocal * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
     "}\0";
 constexpr const char *fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
     "in vec2 TexCoord;\n"
     "in float TexID;\n"
-    "uniform sampler2D uTextures[32];\n"
+    "uniform sampler2D uTexture;\n"
     "void main()\n"
     "{\n"
-    // "   FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
-    "   FragColor = texture(uTextures[int(round(TexID))], TexCoord);\n"
+    "   FragColor = texture(uTexture, TexCoord);\n"
     "}\n\0";
 
 
@@ -80,22 +86,6 @@ void Renderer::Init()
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
 
-    //setup buffers
-    s_data.StartVertex = static_cast<Vertex*>(std::malloc(s_data.VertexBufferSize * sizeof(Vertex)));
-    s_data.TopVertex = s_data.StartVertex;
-    s_data.StartIndex = static_cast<uint32_t*>(std::malloc(s_data.IndexBufferSize * sizeof(uint32_t)));
-
-    //setup static index buffer
-    size_t offset = 0;
-    for(size_t i = 0; i < s_data.IndexBufferSize; i += s_data.QuadIndexAmount)
-    {
-        for(size_t j = 0; j < s_data.QuadIndexAmount; ++j)
-        {
-            s_data.StartIndex[i + j] = offset + s_data.QuadIndices[j];
-        }
-        offset += 4;
-    }
-
     glGenVertexArrays(1, &s_VAO);
     glGenBuffers(1, &s_VBO);
     glGenBuffers(1, &s_EBO);
@@ -103,44 +93,35 @@ void Renderer::Init()
     glBindVertexArray(s_VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, s_VBO);
-    glBufferData(GL_ARRAY_BUFFER, s_data.VertexBufferSize * sizeof(Vertex), s_data.StartVertex, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(s_data.QuadVertices), s_data.QuadVertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, s_data.IndexBufferSize * sizeof(uint32_t), s_data.StartIndex, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(s_data.QuadIndices), s_data.QuadIndices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(5 * sizeof(float)));
-    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    //rebind it statically bc it will never change
+    glBindBuffer(GL_ARRAY_BUFFER, s_VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_EBO);
 
     // glBindVertexArray(s_VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 
     CORE_LOG_SUCCESS("Renderer initialized");
 
     //setup shader data
-    int sampler[s_data.MaxTextureAmount];
-    for(uint32_t i = 0; i < s_data.MaxTextureAmount; ++i)
-    {
-        sampler[i] = i;
-    }
-
-    uint32_t whiteData = 0xffffffff;
-    Texture whiteTexture;
-    whiteTexture.Load(1, 1);
-    whiteTexture.UploadData(&whiteData);
-
-    AddTexture(whiteTexture);
-
-    whiteTexture.Unload();
-
     glUseProgram(s_shaderProgram);
-    glUniform1iv(glGetUniformLocation(s_shaderProgram, "uTextures"), s_data.MaxTextureAmount, sampler);
+    glUniform1i(glGetUniformLocation(s_shaderProgram, "uTexture"), 0);
 
+    //setup camera
+    s_camera.Setup(60.f, Application::GetApp().GetWindow().GetAspectRatio(), 0.1f, 5.f);
+    glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uView"), 1, GL_FALSE, glm::value_ptr(s_camera.GetView()));
+    glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uProjection"), 1, GL_FALSE, glm::value_ptr(s_camera.GetProjection()));
 }
 
 void Renderer::Shutdown()
@@ -154,87 +135,38 @@ void Renderer::Shutdown()
     CORE_LOG_SUCCESS("Renderer shutdown");
 }
 
-void Renderer::Begin()
+void Renderer::Begin(const Transform& model)
 {
     RendererAPI::Clear();
+    glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uModel"), 1, GL_FALSE, glm::value_ptr(model.GetTranslation()));
 }
 
 void Renderer::End()
 {
-    Flush();
 }
 
-void Renderer::DrawQuad(const Texture& tex)
+void Renderer::DrawQuad(const Texture& tex, const Transform& local)
 {
-    //TODO HANDLE BUFFER OVEERFLOW (s_data.VertexBuffersize < s_data.CurrentVertexBufferSize) same for index
-
-    uint32_t texID = AddTexture(tex);
-
-    s_data.TopVertex->Position = s_data.QuadVertices[0];
-    s_data.TopVertex->Position += 0.01f * s_data.IndexCount;
-    s_data.TopVertex->TexCoord = s_data.QuadTexCoord[0];
-    s_data.TopVertex->TexID = texID;
-    ++s_data.TopVertex;
-
-    s_data.TopVertex->Position = s_data.QuadVertices[1];
-    s_data.TopVertex->Position += 0.01f * s_data.IndexCount;
-    s_data.TopVertex->TexCoord = s_data.QuadTexCoord[1];
-    s_data.TopVertex->TexID = texID;
-    ++s_data.TopVertex;
-
-    s_data.TopVertex->Position = s_data.QuadVertices[2];
-    s_data.TopVertex->Position += 0.01f * s_data.IndexCount;
-    s_data.TopVertex->TexCoord = s_data.QuadTexCoord[2];
-    s_data.TopVertex->TexID = texID;
-    ++s_data.TopVertex;
-
-    s_data.TopVertex->Position = s_data.QuadVertices[3];
-    s_data.TopVertex->Position += 0.01f * s_data.IndexCount;
-    s_data.TopVertex->TexCoord = s_data.QuadTexCoord[3];
-    s_data.TopVertex->TexID = texID;
-    ++s_data.TopVertex;
-
-    s_data.IndexCount += s_data.QuadIndexAmount;
+    tex.Bind();
+    glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uLocal"), 1, GL_FALSE, glm::value_ptr(local.GetTranslation()));
+    Flush();
 }
 
 void Renderer::Flush()
 {
-    //bind the vertex and index data
-    glBindBuffer(GL_ARRAY_BUFFER, s_VBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, s_data.VertexBufferSize * sizeof(Vertex), s_data.StartVertex);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_EBO);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, s_data.IndexBufferSize * sizeof(uint32_t), s_data.StartIndex);
-
-    //bind textures
-    for(uint32_t i = 0; i < s_data.TextureCount; ++i)
-    {
-        glBindTexture(GL_TEXTURE_2D, s_data.Textures[i]->GetID());
-    }
+    // bind the vertex and index data
+    // glBindBuffer(GL_ARRAY_BUFFER, s_VBO);
+    // glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(s_data.QuadVertices), s_data.QuadVertices);
+    //
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_EBO);
+    // glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(s_data.QuadIndices), s_data.QuadIndices);
 
     //draw and reset buffer
-    glDrawElements(GL_TRIANGLES, s_data.IndexCount, GL_UNSIGNED_INT, 0);
-    s_data.TopVertex = s_data.StartVertex;
-    s_data.IndexCount = 0;
-    s_data.TextureCount = 1;
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     //unbind buffers for security reason
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-uint32_t Renderer::AddTexture(const Texture& tex)
-{
-    for(size_t i = 0; i < s_data.TextureCount; ++i)
-    {
-        if(tex.GetID() == s_data.Textures[i]->GetID())
-        {
-            return tex.GetID();
-        }
-    }
-
-    s_data.Textures[s_data.TextureCount] = &tex;
-    return s_data.TextureCount++;
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 }

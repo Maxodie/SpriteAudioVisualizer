@@ -8,7 +8,17 @@
 namespace PT
 {
 
+Application* Application::s_instance = nullptr;
+
 Application::Application()
+{
+}
+
+Application::~Application()
+{
+}
+
+void Application::Init()
 {
     m_isRunning = true;
 
@@ -20,13 +30,15 @@ Application::Application()
     RendererAPI::SetViewport(m_window.GetData().Width, m_window.GetData().Height);
 
     Renderer::Init();
+    CORE_LOG_SUCCESS("App Initialized");
 }
 
-Application::~Application()
+void Application::Shutdown()
 {
     Renderer::Shutdown();
     m_window.Destroy();
     GraphicsContext::Shutdown();
+    CORE_LOG_SUCCESS("App Shutdown");
 }
 
 void Application::Run()

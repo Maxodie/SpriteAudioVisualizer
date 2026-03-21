@@ -15,6 +15,8 @@ public:
     void Load(int32_t width, int32_t height);
     void Unload();
 
+    void Bind() const;
+
     void UploadData(void* data);
 
     PT_INLINE uint32_t GetID() const

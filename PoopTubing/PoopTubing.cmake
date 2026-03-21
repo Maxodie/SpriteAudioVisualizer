@@ -31,6 +31,9 @@ add_library(PoopTubing
         PoopTubing/src/Renderer/RenderStructures.hpp
         PoopTubing/src/Renderer/Texture.cpp
         PoopTubing/src/Renderer/Texture.hpp
+        PoopTubing/src/Renderer/Camera.cpp
+        PoopTubing/src/Renderer/Camera.hpp
+        PoopTubing/src/Renderer/Transform.hpp
 
     PoopTubing/src/Core.hpp
 

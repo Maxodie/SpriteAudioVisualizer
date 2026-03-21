@@ -42,6 +42,11 @@ public:
         return m_data;
     }
 
+    PT_INLINE float GetAspectRatio() const
+    {
+        return m_data.Width / static_cast<float>(m_data.Height);
+    }
+
 private:
     GLFWwindow* m_native;
     Data m_data;
