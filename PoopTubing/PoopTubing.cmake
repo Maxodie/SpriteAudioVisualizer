@@ -57,12 +57,21 @@ target_include_directories(PoopTubing PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/stb/stb
 )
 
-set_target_properties(PoopTubing PROPERTIES
-    OUTPUT_NAME PoopTubing
-    ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}/PoopTubing
-    LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR}/PoopTubing
-    RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}/PoopTubing
-)
+if(CMAKE_BUILD_TYPE STREQUAL debug)
+    set_target_properties(PoopTubing PROPERTIES
+        OUTPUT_NAME PoopTubing
+        ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}/PoopTubing/debug
+        LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR}/PoopTubing/debug
+        RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}/PoopTubing/debug
+    )
+else()
+    set_target_properties(PoopTubing PROPERTIES
+        OUTPUT_NAME PoopTubing
+        ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}/PoopTubing/release
+        LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR}/PoopTubing/release
+        RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}/PoopTubing/release
+    )
+endif()
 
 message("==== Config compile definition : ${CONFIG_COMPILE_DEFINITION} ====")
 
