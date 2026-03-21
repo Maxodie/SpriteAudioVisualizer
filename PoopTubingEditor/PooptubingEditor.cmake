@@ -6,6 +6,7 @@ if(CONFIG_COMPILE_DEFINITION STREQUAL PT_EDITOR)
 
     target_link_libraries(PoopTubingEditor PRIVATE
         PoopTubing
+        glm_math
     )
 
     target_include_directories(PoopTubingEditor PRIVATE

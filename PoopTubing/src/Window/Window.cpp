@@ -12,9 +12,6 @@ Window::Window()
 
 Window::~Window()
 {
-    m_openglGraphicsContext.Shutdown();
-    Destroy();
-    CORE_LOG_SUCCESS("glfw window destroyed");
 }
 
 void Window::Create(Data&& data)
@@ -72,6 +69,7 @@ void Window::Destroy()
         glfwDestroyWindow(m_native);
         m_native = nullptr;
     }
+    m_openglGraphicsContext.Shutdown();
     CORE_LOG_SUCCESS("glfw window destroyed");
 }
 

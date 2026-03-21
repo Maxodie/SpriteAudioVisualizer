@@ -1,5 +1,6 @@
 add_library(PoopTubing
     PoopTubing/vendors/glad/glad/src/glad.c
+    PoopTubing/vendors/stb/stb/stb_image.h
 
     PoopTubing/src/EntryPoint.hpp
     PoopTubing/src/EntryPoint.cpp
@@ -27,6 +28,9 @@ add_library(PoopTubing
         PoopTubing/src/Renderer/OpenglGraphicsContext.hpp
         PoopTubing/src/Renderer/Renderer.cpp
         PoopTubing/src/Renderer/Renderer.hpp
+        PoopTubing/src/Renderer/RenderStructures.hpp
+        PoopTubing/src/Renderer/Texture.cpp
+        PoopTubing/src/Renderer/Texture.hpp
 
     PoopTubing/src/Core.hpp
 
@@ -39,7 +43,6 @@ target_link_libraries(PoopTubing PRIVATE
     glm_math
     imgui
     yaml-cpp::yaml-cpp
-    StbImplementation
 )
 
 target_include_directories(PoopTubing PRIVATE

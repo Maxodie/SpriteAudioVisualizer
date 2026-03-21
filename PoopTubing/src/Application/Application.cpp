@@ -3,6 +3,7 @@
 #include "Event/WindowEvent.hpp"
 #include "Window/GraphicsContext.hpp"
 #include "Renderer/RendererAPI.hpp"
+#include "Renderer/Renderer.hpp"
 
 namespace PT
 {
@@ -10,15 +11,20 @@ namespace PT
 Application::Application()
 {
     m_isRunning = true;
+
     GraphicsContext::Init();
+
     m_window.Create({1280, 720, "PoopTubing", PT_BIND_FUN1(Application::OnEvent)});
 
     RendererAPI::SetClearColor(glm::vec4(0.2f, 0.2f, 0.2f, 0.f));
     RendererAPI::SetViewport(m_window.GetData().Width, m_window.GetData().Height);
+
+    Renderer::Init();
 }
 
 Application::~Application()
 {
+    Renderer::Shutdown();
     m_window.Destroy();
     GraphicsContext::Shutdown();
 }

@@ -4,4 +4,5 @@
 #include "Log/Log.hpp"
 #include "Event/Event.hpp"
 
+#include "Renderer/Texture.hpp"
 #include "Renderer/Renderer.hpp"

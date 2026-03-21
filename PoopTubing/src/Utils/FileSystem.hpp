@@ -1,7 +1,7 @@
 #pragma once
 #include "Core.hpp"
 
-namespace WB
+namespace PT
 {
 
 using Path = std::filesystem::path;

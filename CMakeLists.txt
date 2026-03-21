@@ -38,7 +38,7 @@ include(PoopTubingEditor/PoopTubingEditor.cmake)
 include(PoopTubing/vendors/GLFW/GLFW.cmake)
 include(PoopTubing/vendors/glm/glm.cmake)
 include(PoopTubing/vendors/imgui/imgui.cmake)
-include(PoopTubing/vendors/stb/stb.cmake)
+include(PoopTubing/vendors/glad/glad.cmake)
 add_subdirectory(PoopTubing/vendors/yamlcpp/yaml-cpp)
 
 unset(COMPILE_CONFIG_BUILD CACHE)

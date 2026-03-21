@@ -6,6 +6,12 @@ public:
     virtual void Update() override
     {
         PT::Renderer::Begin();
+        PT::Renderer::DrawQuad(texture);
+        PT::Renderer::DrawQuad(texture);
+        PT::Renderer::DrawQuad(texture);
+        PT::Renderer::DrawQuad(texture);
+        PT::Renderer::DrawQuad(texture);
+        PT::Renderer::DrawQuad(texture);
         PT::Renderer::End();
     }
 
@@ -21,13 +27,17 @@ public:
 
     virtual void OnAttach() override
     {
-
+        PT::Path mrFrogPath = "TestAssets/mrFrog.png";
+        texture.Load(mrFrogPath);
     }
 
     virtual void OnDetach() override
     {
-
+        texture.Unload();
     }
+
+private:
+    PT::Texture texture;
 };
 
 void StartApplication(PT::Application& app)

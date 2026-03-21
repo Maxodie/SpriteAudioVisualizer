@@ -6,7 +6,7 @@
 #include "ShlObj_core.h"
 #endif
 
-namespace WB
+namespace PT
 {
 
 bool FileSystem::SyncReadAtPathAsString(const Path& path, std::string& outData)
