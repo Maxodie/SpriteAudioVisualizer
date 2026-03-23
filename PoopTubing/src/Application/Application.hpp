@@ -21,9 +21,16 @@ public:
     void Stop();
 
     template<typename TLayer, typename ... TArgs>
-    std::shared_ptr<TLayer> AddLayer(TArgs&&... args)
+    PT_INLINE std::shared_ptr<TLayer> AddLayer(TArgs&&... args)
     {
         return m_layerStack.AddLayer<TLayer>(std::forward<TArgs>(args)...);
+    }
+
+    template<typename TLayer, typename ... TArgs>
+    PT_INLINE void RemoveLayer()
+    {
+        // return m_layerStack.RemoveLayer<TLayer>();
+        // send action as event
     }
 
     PT_INLINE const Window& GetWindow() const
@@ -53,6 +60,7 @@ public:
     PT_INLINE static void Destroy()
     {
         delete s_instance;
+        s_instance = nullptr;
         CORE_LOG_SUCCESS("App destroyed");
     }
 

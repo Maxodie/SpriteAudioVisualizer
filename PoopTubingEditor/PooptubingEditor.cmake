@@ -12,6 +12,7 @@ if(CONFIG_COMPILE_DEFINITION STREQUAL PT_EDITOR)
     target_include_directories(PoopTubingEditor PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/src
         ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubingEditor/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/portaudio/portaudio/include
     )
 
     if(CMAKE_BUILD_TYPE STREQUAL debug)

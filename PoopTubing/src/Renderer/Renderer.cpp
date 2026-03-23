@@ -126,8 +126,6 @@ void Renderer::Init()
 
 void Renderer::Shutdown()
 {
-    CORE_LOG_SUCCESS("Test texture shutdown");
-
     glDeleteVertexArrays(1, &s_VAO);
     glDeleteBuffers(1, &s_VBO);
     glDeleteBuffers(1, &s_EBO);

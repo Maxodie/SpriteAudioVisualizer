@@ -53,7 +53,7 @@ target_link_libraries(PoopTubing PRIVATE
     yaml-cpp::yaml-cpp
 
     # portaudio
-    ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/portaudio/portaudio/lib/.libs/portaudio.dll.lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/portaudio/lib/.libs/portaudio.dll.lib
 )
 
 target_include_directories(PoopTubing PRIVATE

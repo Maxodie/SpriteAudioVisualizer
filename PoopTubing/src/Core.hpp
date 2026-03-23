@@ -33,8 +33,8 @@ if(!(exp))\
 {CLIENT_LOG_ERROR(msg, __VA_ARGS__); assert(0);}\
 }while(0)
 #else
-#   define PT_CORE_ASSERT(exp, msg)
-#   define PT_CLIENT_ASSERT(exp, msg)
+#   define PT_CORE_ASSERT(exp, msg, ...)
+#   define PT_CLIENT_ASSERT(exp, msg, ...)
 #endif
 
 #define PT_BIND_FUN0(fun) std::bind(&fun, this)

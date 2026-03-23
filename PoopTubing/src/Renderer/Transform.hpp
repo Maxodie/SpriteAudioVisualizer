@@ -10,28 +10,44 @@ class Transform
 {
 public:
     Transform()
-        : m_model(1.0f)
+        : m_rotation(1.0f)
     {
 
     }
 
-    PT_FORCE_INLINE const glm::mat4& GetModel() const
+    PT_FORCE_INLINE const glm::mat4 GetModel() const
     {
-        return m_model;
+        return glm::translate(glm::mat4(1.0f), m_position) * m_rotation;
     }
 
     PT_FORCE_INLINE void AddOffsetLocation(const glm::vec3& offsetLocation)
     {
-        m_model = glm::translate(m_model, offsetLocation);
+        m_position += offsetLocation;
+    }
+
+    PT_FORCE_INLINE void SetLocation(const glm::vec3& location)
+    {
+        m_position = location;
+    }
+
+    PT_FORCE_INLINE glm::vec3 GetLocation()
+    {
+        return m_position;
     }
 
     PT_FORCE_INLINE void AddOffsetRotation(const glm::vec3& axis, float angle)
     {
-        m_model = glm::rotate(m_model, angle, axis);
+        m_rotation = glm::rotate(m_rotation, angle, axis);
+    }
+
+    PT_FORCE_INLINE void SetRotation(const glm::vec3& axis, float angle)
+    {
+        m_rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
     }
 
 private:
-    glm::mat4 m_model;
+    glm::vec3 m_position;
+    glm::mat4 m_rotation;
 };
 
 }

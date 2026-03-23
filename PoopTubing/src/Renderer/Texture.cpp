@@ -26,7 +26,7 @@ void Texture::Load(Path& path)
 
     stbi_image_free(data);
 
-    CORE_LOG_SUCCESS("Texture initialized");
+    CORE_LOG_SUCCESS("Texture %d initialized", m_id);
 }
 
 void Texture::Load(int32_t width, int32_t height)
@@ -39,6 +39,7 @@ void Texture::Load(int32_t width, int32_t height)
 
 void Texture::Unload()
 {
+    CORE_LOG_SUCCESS("Texture %d shutdown", m_id);
     glDeleteTextures(1, &m_id);
 }
 

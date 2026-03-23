@@ -1,4 +1,5 @@
 #include "Application.hpp"
+#include "Audio/Microphone.hpp"
 #include "Event/Event.hpp"
 #include "Event/WindowEvent.hpp"
 #include "Window/GraphicsContext.hpp"
@@ -30,11 +31,16 @@ void Application::Init()
     RendererAPI::SetViewport(m_window.GetData().Width, m_window.GetData().Height);
 
     Renderer::Init();
+
+    Microphone::Init();
     CORE_LOG_SUCCESS("App Initialized");
 }
 
 void Application::Shutdown()
 {
+    m_layerStack.ClearLayers();
+    Microphone::Shutdown();
+
     Renderer::Shutdown();
     m_window.Destroy();
     GraphicsContext::Shutdown();
