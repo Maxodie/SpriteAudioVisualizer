@@ -41,4 +41,7 @@ include(PoopTubing/vendors/imgui/imgui.cmake)
 include(PoopTubing/vendors/glad/glad.cmake)
 add_subdirectory(PoopTubing/vendors/yamlcpp/yaml-cpp)
 
+# find_package(portaudio REQUIRED)
+# add_subdirectory(PoopTubing/vendors/portaudio/portaudio EXCLUDE_FROM_ALL)
+
 unset(COMPILE_CONFIG_BUILD CACHE)

@@ -138,7 +138,7 @@ void Renderer::Shutdown()
 void Renderer::Begin(const Transform& model)
 {
     RendererAPI::Clear();
-    glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uModel"), 1, GL_FALSE, glm::value_ptr(model.GetTranslation()));
+    glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uModel"), 1, GL_FALSE, glm::value_ptr(model.GetModel()));
 }
 
 void Renderer::End()
@@ -148,7 +148,7 @@ void Renderer::End()
 void Renderer::DrawQuad(const Texture& tex, const Transform& local)
 {
     tex.Bind();
-    glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uLocal"), 1, GL_FALSE, glm::value_ptr(local.GetTranslation()));
+    glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uLocal"), 1, GL_FALSE, glm::value_ptr(local.GetModel()));
     Flush();
 }
 

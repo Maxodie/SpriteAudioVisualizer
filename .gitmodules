@@ -13,3 +13,6 @@
 [submodule "PoopTubing/vendors/stb/stb"]
 	path = PoopTubing/vendors/stb/stb
 	url = https://github.com/nothings/stb
+[submodule "PoopTubing/vendors/portaudio/portaudio"]
+	path = PoopTubing/vendors/portaudio/portaudio
+	url = https://github.com/PortAudio/portaudio

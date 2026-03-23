@@ -35,17 +35,25 @@ add_library(PoopTubing
         PoopTubing/src/Renderer/Camera.hpp
         PoopTubing/src/Renderer/Transform.hpp
 
+        PoopTubing/src/Audio/Microphone.cpp
+        PoopTubing/src/Audio/Microphone.hpp
+
     PoopTubing/src/Core.hpp
 
     PoopTubing/src/Log/Log.hpp
     PoopTubing/src/Log/Log.cpp
 )
 
+install(TARGETS PoopTubing LIBRARY COMPONENT portaudio)
+
 target_link_libraries(PoopTubing PRIVATE
     glfw
     glm_math
     imgui
     yaml-cpp::yaml-cpp
+
+    # portaudio
+    ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/portaudio/portaudio/lib/.libs/portaudio.dll.lib
 )
 
 target_include_directories(PoopTubing PRIVATE
@@ -55,6 +63,7 @@ target_include_directories(PoopTubing PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/imgui/imgui
     ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/yamlcpp/yaml-cpp/include
     ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/stb/stb
+    ${CMAKE_CURRENT_SOURCE_DIR}/PoopTubing/vendors/portaudio/portaudio/include
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL debug)

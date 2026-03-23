@@ -1,3 +1,4 @@
+#include "Audio/Microphone.hpp"
 #include <PoopTubing.hpp>
 
 class EditorLayer : public PT::Layer
@@ -5,16 +6,20 @@ class EditorLayer : public PT::Layer
 public:
     virtual void Update() override
     {
-        m_MovementAlpha += 0.00001f;
-        glm::vec3 lerpMove = glm::mix(glm::vec3(), glm::vec3(0.0f, 1.0f, 0.0f), m_MovementAlpha);
+        m_movementAlpha += 0.00001f;
+        glm::vec3 lerpMove = glm::mix(glm::vec3(), glm::vec3(0.0f, 0.05f, 0.0f), m_movementAlpha);
         m_headLocalTranform.AddOffsetLocation(std::move(lerpMove));
+
+        m_rotAlpha += 0.00001f;
+        glm::vec3 lerpRot = glm::vec3(0.0f, 1.0f, 0.0f);
+        m_modelTranform.AddOffsetRotation(std::move(lerpRot), 0.05f);
 
         PT::Renderer::Begin(m_modelTranform);
 
         PT::Renderer::DrawQuad(m_bodyTexture, m_localTranform);
         PT::Renderer::DrawQuad(m_headTexture, m_headLocalTranform);
-        PT::Renderer::DrawQuad(m_leftTexture, m_localTranform);
-        PT::Renderer::DrawQuad(m_rightTexture, m_localTranform);
+        PT::Renderer::DrawQuad(m_leftTexture, m_headLocalTranform);
+        PT::Renderer::DrawQuad(m_rightTexture, m_headLocalTranform);
 
         PT::Renderer::End();
     }
@@ -42,6 +47,8 @@ public:
 
         PT::Path mrFrogRightEyePath = "TestAssets/mrfrogRightPupil.png";
         m_rightTexture.Load(mrFrogRightEyePath);
+
+        const std::vector<PT::MicrophoneDevice>& micDevices = PT::Microphone::Get().GetDevices();
     }
 
     virtual void OnDetach() override
@@ -65,7 +72,8 @@ private:
     PT::Transform m_headLocalTranform;
     PT::Transform m_modelTranform;
 
-    float m_MovementAlpha = 0.0f;
+    float m_movementAlpha = 0.0f;
+    float m_rotAlpha = 0.0f;
 };
 
 void StartApplication(PT::Application& app)

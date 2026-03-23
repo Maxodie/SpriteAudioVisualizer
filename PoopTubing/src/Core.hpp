@@ -16,20 +16,21 @@
 #include "Log/Log.hpp"
 
 #define PT_INLINE inline
+#define PT_FORCE_INLINE __forceinline
 
 #ifdef PT_ASSERT
-#   define PT_CORE_ASSERT(exp, msg)\
+#   define PT_CORE_ASSERT(exp, msg, ...)\
 do\
 {\
 if(!(exp))\
-{CORE_LOG_ERROR(msg); assert(0);}\
+{CORE_LOG_ERROR(msg, __VA_ARGS__); assert(0);}\
 }while(0)
 
-#   define PT_CLIENT_ASSERT(exp, msg)\
+#   define PT_CLIENT_ASSERT(exp, msg, ...)\
 do\
 {\
 if(!(exp))\
-{assert(0); CLIENT_LOG_ERROR(msg);}\
+{CLIENT_LOG_ERROR(msg, __VA_ARGS__); assert(0);}\
 }while(0)
 #else
 #   define PT_CORE_ASSERT(exp, msg)
