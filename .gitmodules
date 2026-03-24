@@ -16,3 +16,6 @@
 [submodule "SpriteAudioVisualizer/vendors/imgui/imgui"]
 	path = SpriteAudioVisualizer/vendors/imgui/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "SpriteAudioVisualizer/vendors/portaudio/portaudio"]
+	path = SpriteAudioVisualizer/vendors/portaudio/portaudio
+	url = https://github.com/PortAudio/portaudio
