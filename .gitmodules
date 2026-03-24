@@ -1,18 +1,18 @@
-[submodule "PoopTubing/vendors/imgui/imgui"]
-	path = PoopTubing/vendors/imgui/imgui
-	url = https://github.com/ocornut/imgui
 [submodule "PoopTubing/vendors/GLFW/glfw"]
-	path = PoopTubing/vendors/GLFW/glfw
+	path = SpriteAudioVisualizer/vendors/GLFW/glfw
 	url = https://github.com/glfw/glfw
 [submodule "PoopTubing/vendors/glm/glm"]
-	path = PoopTubing/vendors/glm/glm
+	path = SpriteAudioVisualizer/vendors/glm/glm
 	url = https://github.com/g-truc/glm
 [submodule "PoopTubing/vendors/yamlcpp/yaml-cpp"]
-	path = PoopTubing/vendors/yamlcpp/yaml-cpp
+	path = SpriteAudioVisualizer/vendors/yamlcpp/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp
 [submodule "PoopTubing/vendors/stb/stb"]
-	path = PoopTubing/vendors/stb/stb
+	path = SpriteAudioVisualizer/vendors/stb/stb
 	url = https://github.com/nothings/stb
 [submodule "PoopTubing/vendors/portaudio/portaudio"]
-	path = PoopTubing/vendors/portaudio/portaudio
+	path = SpriteAudioVisualizer/vendors/portaudio/portaudio
 	url = https://github.com/PortAudio/portaudio
+[submodule "SpriteAudioVisualizer/vendors/imgui/imgui"]
+	path = SpriteAudioVisualizer/vendors/imgui/imgui
+	url = https://github.com/ocornut/imgui
