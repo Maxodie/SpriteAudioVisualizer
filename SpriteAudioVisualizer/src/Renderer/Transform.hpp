@@ -1,7 +1,11 @@
 #pragma once
 #include "Core.hpp"
 #include "glm/ext/matrix_transform.hpp"
-#include "glm/glm.hpp"
+#include "glm/ext/scalar_constants.hpp"
+#include "glm/gtc/quaternion.hpp"
+#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/gtx/euler_angles.hpp"
+#include "glm/gtx/quaternion.hpp"
 
 namespace PT
 {
@@ -36,9 +40,14 @@ public:
         m_position = location;
     }
 
-    PT_FORCE_INLINE glm::vec3 GetLocation()
+    PT_FORCE_INLINE const glm::vec3& GetLocation()
     {
         return m_position;
+    }
+
+    PT_FORCE_INLINE glm::quat GetRotation() const
+    {
+        return glm::toQuat(m_rotation);
     }
 
     PT_FORCE_INLINE void AddOffsetRotation(const glm::vec3& axis, float angle)
@@ -49,6 +58,16 @@ public:
     PT_FORCE_INLINE void SetRotation(const glm::vec3& axis, float angle)
     {
         m_rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
+    }
+
+    PT_FORCE_INLINE void SetRotation(const glm::quat& rotation)
+    {
+        m_rotation = glm::toMat4(rotation);
+    }
+
+    PT_FORCE_INLINE static glm::quat MakeQuatFromEulerXYZ(const glm::vec3& rotation)
+    {
+        return glm::quat(glm::radians(rotation));
     }
 
 private:

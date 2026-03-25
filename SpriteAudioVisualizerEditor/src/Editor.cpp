@@ -1,6 +1,7 @@
-#include "Audio/Microphone.hpp"
-#include "Log/Log.hpp"
+#include "Renderer/Transform.hpp"
+#include "glm/trigonometric.hpp"
 #include <PoopTubing.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 class EditorLayer : public PT::Layer
 {
@@ -22,6 +23,10 @@ public:
         glm::vec3 bodyLocation = glm::vec3(0.0f, -0.2f, 0.0f) * loudness;
         glm::vec3 bodyLerpMove = glm::mix(m_bodylocalTranform.GetLocation(), bodyLocation, deltaTime * 100.f);
         m_bodylocalTranform.SetLocation(std::move(bodyLerpMove));
+
+        glm::quat modelMaxRotationOffsetDeg = PT::Transform::MakeQuatFromEulerXYZ(glm::vec3(-15.0f, 45.0f, 5.f));
+        glm::quat modelRotLerpMove = glm::slerp(m_modelTranform.GetRotation(), modelMaxRotationOffsetDeg, deltaTime);
+        m_modelTranform.SetRotation(std::move(modelRotLerpMove));
 
         // m_rotAlpha += 0.00001f;
         // glm::vec3 lerpRot = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -117,7 +122,7 @@ private:
     PT::Texture m_leftTexture;
     PT::Texture m_rightTexture;
 
-    PT::Transform m_modelTranform = glm::vec3(3.2f, 3.2f, 3.2f);
+    PT::Transform m_modelTranform{glm::vec3(3.2f, 3.2f, 3.2f)};
     PT::Transform m_bodylocalTranform;
     PT::Transform m_headLocalTranform;
 
