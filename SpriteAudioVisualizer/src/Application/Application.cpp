@@ -5,6 +5,7 @@
 #include "Window/GraphicsContext.hpp"
 #include "Renderer/RendererAPI.hpp"
 #include "Renderer/Renderer.hpp"
+#include <chrono>
 
 namespace PT
 {
@@ -49,13 +50,17 @@ void Application::Shutdown()
 
 void Application::Run()
 {
+    m_dt = 1.f / 60.f;
+
     while(m_isRunning)
     {
+        m_beginTicks = std::chrono::high_resolution_clock::now();
+
         m_window.PollEvent();
 
         for(auto& layer : m_layerStack.GetLayers())
         {
-            layer->Update();
+            layer->Update(m_dt);
         }
 
         for(auto& layer : m_layerStack.GetLayers())
@@ -64,6 +69,15 @@ void Application::Run()
         }
 
         m_window.SwapBuffers();
+
+        m_endTicks = std::chrono::high_resolution_clock::now();
+        m_dt = std::chrono::duration_cast<std::chrono::milliseconds>(m_endTicks - m_beginTicks).count() / 1000.f;
+
+        if(m_dt > 1.f)
+        {
+            // m_dt = 1.f / 60.f;
+        }
+        m_beginTicks = m_endTicks;
     }
 }
 

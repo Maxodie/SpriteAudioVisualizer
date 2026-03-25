@@ -11,7 +11,7 @@ public:
     Layer() = default;
     virtual ~Layer() = default;
 
-    virtual void Update() = 0;
+    virtual void Update(float deltaTime) = 0;
     virtual void OnEvent(class Event& event) = 0;
     virtual void UpdateGUI() = 0;
     virtual void OnAttach() = 0;

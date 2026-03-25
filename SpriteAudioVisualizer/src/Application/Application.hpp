@@ -74,8 +74,11 @@ private:
     LayerStack m_layerStack;
     Window m_window;
 
+    std::chrono::time_point<std::chrono::steady_clock> m_beginTicks;
+    std::chrono::time_point<std::chrono::steady_clock> m_endTicks;
+    float m_dt;
     bool m_isRunning = false;
-    char padding[6];
+    char padding[3];
 };
 
 }

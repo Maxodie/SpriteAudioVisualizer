@@ -5,15 +5,23 @@
 class EditorLayer : public PT::Layer
 {
 public:
-    virtual void Update() override
+    virtual void Update(float deltaTime) override
     {
         long clipPos = PT::Microphone::Get().GetStreamReadPosition(m_micDevice);
-        float loudness = GetLoudnessFromWaves(clipPos);
+        float loudness = 0.0f;
+        if(!GetLoudnessFromWaves(clipPos, loudness))
+        {
+            return;
+        }
 
-        // m_movementAlpha += 0.00001f;
         glm::vec3 headLocation = glm::vec3(0.0f, 0.5f, 0.0f) * loudness;
-        glm::vec3 lerpMove = glm::mix(m_headLocalTranform.GetLocation(), headLocation, 0.05f);
-        m_headLocalTranform.SetLocation(std::move(lerpMove));
+        glm::vec3 headLerpMove = glm::mix(m_headLocalTranform.GetLocation(), headLocation, deltaTime * 100.f);
+        m_headLocalTranform.SetLocation(std::move(headLerpMove));
+
+
+        glm::vec3 bodyLocation = glm::vec3(0.0f, -0.2f, 0.0f) * loudness;
+        glm::vec3 bodyLerpMove = glm::mix(m_bodylocalTranform.GetLocation(), bodyLocation, deltaTime * 100.f);
+        m_bodylocalTranform.SetLocation(std::move(bodyLerpMove));
 
         // m_rotAlpha += 0.00001f;
         // glm::vec3 lerpRot = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -21,7 +29,7 @@ public:
 
         PT::Renderer::Begin(m_modelTranform);
 
-        PT::Renderer::DrawQuad(m_bodyTexture, m_localTranform);
+        PT::Renderer::DrawQuad(m_bodyTexture, m_bodylocalTranform);
         PT::Renderer::DrawQuad(m_headTexture, m_headLocalTranform);
         PT::Renderer::DrawQuad(m_leftTexture, m_headLocalTranform);
         PT::Renderer::DrawQuad(m_rightTexture, m_headLocalTranform);
@@ -59,6 +67,8 @@ public:
         CLIENT_LOG_DEBUG("Microphone device selected : %s", deviceName.c_str());
 
         mic.StartStream(m_micDevice, s_micFramePerBuffer);
+
+        m_modelTranform.AddOffsetLocation(glm::vec3(0.f, -3.5f, 0.f));
     }
 
     virtual void OnDetach() override
@@ -74,30 +84,31 @@ public:
         m_bodyTexture.Unload();
     }
 
-    float GetLoudnessFromWaves(long clipPos)
+    bool GetLoudnessFromWaves(long clipPos, float& outValue)
     {
         long startPos = clipPos - s_micFramePerBuffer;
         if(startPos <= 0)
         {
-            return 0.0f;
+            return false;
         }
 
         const float* inputData = PT::Microphone::Get().GetStreamInputData(m_micDevice);
-        int dispSize = 100;
 
         float vol = 0;
 
-        for(unsigned long i = 0; i < s_micSampleSize; ++i)
+        for(unsigned long i = 0; i < s_micFramePerBuffer; ++i)
         {
             vol += std::abs(inputData[i]);
         }
 
         if(vol > s_micDetectionThreshold)
         {
-            return std::max(vol / static_cast<float>(s_micSampleSize), s_minValue);
+            outValue = std::clamp(vol / 10.f, s_minValue, 1.0f);
+            return true;
         }
 
-        return 0.0f;
+        outValue = 0.0f;
+        return true;
     }
 
 private:
@@ -106,9 +117,9 @@ private:
     PT::Texture m_leftTexture;
     PT::Texture m_rightTexture;
 
-    PT::Transform m_localTranform;
+    PT::Transform m_modelTranform = glm::vec3(3.2f, 3.2f, 3.2f);
+    PT::Transform m_bodylocalTranform;
     PT::Transform m_headLocalTranform;
-    PT::Transform m_modelTranform;
 
     float m_movementAlpha = 0.0f;
     float m_rotAlpha = 0.0f;
@@ -116,7 +127,7 @@ private:
     int32_t m_micDevice;
     static constexpr unsigned long s_micFramePerBuffer = 256;
     static constexpr unsigned long s_micSampleSize = 64;
-    static constexpr float s_micDetectionThreshold = 0.8f;
+    static constexpr float s_micDetectionThreshold = 1.5f;
     static constexpr float s_minValue = 0.5f;
 };
 

@@ -119,7 +119,7 @@ void Renderer::Init()
     glUniform1i(glGetUniformLocation(s_shaderProgram, "uTexture"), 0);
 
     //setup camera
-    s_camera.Setup(60.f, Application::GetApp().GetWindow().GetAspectRatio(), 0.1f, 5.f);
+    s_camera.Setup(60.f, Application::GetApp().GetWindow().GetAspectRatio(), 0.1f, 11.f);
     glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uView"), 1, GL_FALSE, glm::value_ptr(s_camera.GetView()));
     glUniformMatrix4fv(glGetUniformLocation(s_shaderProgram, "uProjection"), 1, GL_FALSE, glm::value_ptr(s_camera.GetProjection()));
 }
