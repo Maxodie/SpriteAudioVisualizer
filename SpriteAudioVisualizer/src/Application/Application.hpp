@@ -26,11 +26,14 @@ public:
         return m_layerStack.AddLayer<TLayer>(std::forward<TArgs>(args)...);
     }
 
-    template<typename TLayer, typename ... TArgs>
+    template<typename TLayer>
     PT_INLINE void RemoveLayer()
     {
-        // return m_layerStack.RemoveLayer<TLayer>();
-        // send action as event
+        PostEvent(
+            [&]()
+            {
+                m_layerStack.RemoveLayer<TLayer>();
+            });
     }
 
     PT_INLINE const Window& GetWindow() const
@@ -64,8 +67,14 @@ public:
         CORE_LOG_SUCCESS("App destroyed");
     }
 
+    PT_INLINE void PostEvent(std::function<void()> postCallback)
+    {
+        m_taskEventQueue.push(std::move(postCallback));
+    }
+
 private:
     void OnEvent(Event& event);
+    void PollTasks();
     bool OnWindowClosedCallback(const class WindowClosedEvent& event);
     bool OnWindowResizedCallback(const class WindowResizeEvent& event);
 
@@ -76,6 +85,8 @@ private:
 
     std::chrono::time_point<std::chrono::steady_clock> m_beginTicks;
     std::chrono::time_point<std::chrono::steady_clock> m_endTicks;
+    std::queue<std::function<void()>> m_taskEventQueue;
+
     float m_dt;
     bool m_isRunning = false;
     char padding[3];

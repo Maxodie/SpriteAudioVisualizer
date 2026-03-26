@@ -57,6 +57,7 @@ void Application::Run()
         m_beginTicks = std::chrono::high_resolution_clock::now();
 
         m_window.PollEvent();
+        PollTasks();
 
         for(auto& layer : m_layerStack.GetLayers())
         {
@@ -69,6 +70,7 @@ void Application::Run()
         }
 
         m_window.SwapBuffers();
+
 
         m_endTicks = std::chrono::high_resolution_clock::now();
         m_dt = std::chrono::duration_cast<std::chrono::milliseconds>(m_endTicks - m_beginTicks).count() / 1000.f;
@@ -98,6 +100,15 @@ void Application::OnEvent(Event& event)
         {
             layer->OnEvent(event);
         }
+    }
+}
+
+void Application::PollTasks()
+{
+    while(!m_taskEventQueue.empty())
+    {
+        m_taskEventQueue.front()();
+        m_taskEventQueue.pop();
     }
 }
 

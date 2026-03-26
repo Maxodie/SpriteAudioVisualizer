@@ -19,13 +19,12 @@ public:
         glm::vec3 headLerpMove = glm::mix(m_headLocalTranform.GetLocation(), headLocation, deltaTime * 100.f);
         m_headLocalTranform.SetLocation(std::move(headLerpMove));
 
-
         glm::vec3 bodyLocation = glm::vec3(0.0f, -0.2f, 0.0f) * loudness;
         glm::vec3 bodyLerpMove = glm::mix(m_bodylocalTranform.GetLocation(), bodyLocation, deltaTime * 100.f);
         m_bodylocalTranform.SetLocation(std::move(bodyLerpMove));
 
-        glm::quat modelMaxRotationOffsetDeg = PT::Transform::MakeQuatFromEulerXYZ(glm::vec3(-15.0f, 45.0f, 5.f));
-        glm::quat modelRotLerpMove = glm::slerp(m_modelTranform.GetRotation(), modelMaxRotationOffsetDeg, deltaTime);
+        glm::quat modelMaxRotationOffsetDeg = PT::Transform::MakeQuatFromEulerXYZ(glm::vec3(-15.0f, 45.0f, 5.f) * loudness);
+        glm::quat modelRotLerpMove = glm::slerp(m_modelTranform.GetRotation(), modelMaxRotationOffsetDeg, deltaTime * 100.f);
         m_modelTranform.SetRotation(std::move(modelRotLerpMove));
 
         // m_rotAlpha += 0.00001f;
