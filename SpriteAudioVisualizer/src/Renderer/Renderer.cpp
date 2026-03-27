@@ -14,7 +14,7 @@ uint32_t Renderer::s_vertexShader;
 uint32_t Renderer::s_fragmentShader;
 Camera Renderer::s_camera;
 
-constexpr const  char *vertexShaderSource = "#version 330 core\n"
+constexpr const  char *vertexShaderSource = "#version 410 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "layout (location = 1) in vec2 aTexCoord;\n"
     "layout (location = 2) in float aTexID;\n"
@@ -30,7 +30,7 @@ constexpr const  char *vertexShaderSource = "#version 330 core\n"
     "   TexID = aTexID;\n"
     "   gl_Position = uProjection * uView * uModel * uLocal * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
     "}\0";
-constexpr const char *fragmentShaderSource = "#version 330 core\n"
+constexpr const char *fragmentShaderSource = "#version 410 core\n"
     "out vec4 FragColor;\n"
     "in vec2 TexCoord;\n"
     "in float TexID;\n"

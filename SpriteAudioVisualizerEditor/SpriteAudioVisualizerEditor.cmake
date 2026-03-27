@@ -6,6 +6,7 @@ if(CONFIG_COMPILE_DEFINITION STREQUAL PT_EDITOR)
 
     target_link_libraries(SpriteAudioVisualizerEditor PRIVATE
         SpriteAudioVisualizer
+        imgui
         glm_math
     )
 

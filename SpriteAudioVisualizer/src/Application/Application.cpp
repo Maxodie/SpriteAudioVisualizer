@@ -1,5 +1,6 @@
 #include "Application.hpp"
 #include "Audio/Microphone.hpp"
+#include "Editor/ImGuiEditor.hpp"
 #include "Event/Event.hpp"
 #include "Event/WindowEvent.hpp"
 #include "Window/GraphicsContext.hpp"
@@ -33,6 +34,8 @@ void Application::Init()
 
     Renderer::Init();
 
+    ImGuiEditor::Init();
+
     Microphone::Init();
     CORE_LOG_SUCCESS("App Initialized");
 }
@@ -42,6 +45,7 @@ void Application::Shutdown()
     m_layerStack.ClearLayers();
     Microphone::Shutdown();
 
+    ImGuiEditor::Shutdown();
     Renderer::Shutdown();
     m_window.Destroy();
     GraphicsContext::Shutdown();
@@ -64,10 +68,12 @@ void Application::Run()
             layer->Update(m_dt);
         }
 
+        ImGuiEditor::Begin();
         for(auto& layer : m_layerStack.GetLayers())
         {
             layer->UpdateGUI();
         }
+        ImGuiEditor::End();
 
         m_window.SwapBuffers();
 

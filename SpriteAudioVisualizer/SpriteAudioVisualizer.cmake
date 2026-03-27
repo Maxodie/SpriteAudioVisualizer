@@ -38,6 +38,9 @@ add_library(SpriteAudioVisualizer
         SpriteAudioVisualizer/src/Audio/Microphone.cpp
         SpriteAudioVisualizer/src/Audio/Microphone.hpp
 
+        SpriteAudioVisualizer/src/Editor/ImGuiEditor.hpp
+        SpriteAudioVisualizer/src/Editor/ImGuiEditor.cpp
+
     SpriteAudioVisualizer/src/Core.hpp
 
     SpriteAudioVisualizer/src/Log/Log.hpp

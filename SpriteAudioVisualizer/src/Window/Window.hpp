@@ -26,7 +26,7 @@ public:
     void PollEvent();
     void SwapBuffers();
 
-    PT_INLINE void* GetNative()
+    PT_INLINE GLFWwindow* GetNative() const
     {
         return m_native;
     }
