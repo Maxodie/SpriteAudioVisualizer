@@ -1,7 +1,11 @@
 if(CONFIG_COMPILE_DEFINITION STREQUAL PT_EDITOR)
     message("==== Compile Editor ====")
     add_executable(SpriteAudioVisualizerEditor
+
         SpriteAudioVisualizerEditor/src/Editor.cpp
+        SpriteAudioVisualizerEditor/src/Editor.hpp
+        SpriteAudioVisualizerEditor/src/MicSelection.cpp
+        SpriteAudioVisualizerEditor/src/MicSelection.hpp
     )
 
     target_link_libraries(SpriteAudioVisualizerEditor PRIVATE
@@ -14,6 +18,7 @@ if(CONFIG_COMPILE_DEFINITION STREQUAL PT_EDITOR)
         ${CMAKE_CURRENT_SOURCE_DIR}/SpriteAudioVisualizer/src
         ${CMAKE_CURRENT_SOURCE_DIR}/SpriteAudioVisualizerEditor/src
         ${CMAKE_CURRENT_SOURCE_DIR}/SpriteAudioVisualizer/vendors/portaudio/portaudio/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/SpriteAudioVisualizer/vendors/imgui/imgui
     )
 
     if(CMAKE_BUILD_TYPE STREQUAL debug)

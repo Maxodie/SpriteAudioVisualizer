@@ -44,12 +44,17 @@ void MicrophoneDevice::StartStream(unsigned long framePerBuffer)
         nullptr,
         this);
 
-    PT_CORE_ASSERT(err == paNoError, "Portaudio error: %s.", Pa_GetErrorText(err));
+    if(err == paNoError)
+    {
+        err = Pa_StartStream(m_stream);
+        PT_CORE_ASSERT(err == paNoError, "Portaudio error: %s.", Pa_GetErrorText(err));
 
-    err = Pa_StartStream(m_stream);
-    PT_CORE_ASSERT(err == paNoError, "Portaudio error: %s.", Pa_GetErrorText(err));
-
-    CORE_LOG_SUCCESS("Stream on device %d started", m_id);
+        CORE_LOG_SUCCESS("Stream on device %s started", m_deviceInfo->name);
+    }
+    else
+    {
+        CORE_LOG_ERROR("Portaudio error: %s on device %s.", Pa_GetErrorText(err), m_deviceInfo->name);
+    }
 }
 
 void MicrophoneDevice::StopStream()
@@ -64,7 +69,7 @@ void MicrophoneDevice::StopStream()
     std::free(m_inputBuffer);
     m_inputBuffer = nullptr;
 
-    CORE_LOG_SUCCESS("Stream on device %d stopped", m_id);
+    CORE_LOG_SUCCESS("Stream on device %d stopped", m_deviceInfo->name);
 }
 
 Microphone* Microphone::s_instance = nullptr;

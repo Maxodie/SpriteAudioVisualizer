@@ -41,7 +41,7 @@ public:
         return m_window;
     }
 
-    PT_INLINE static const Application& GetApp()
+    PT_INLINE static Application& GetApp()
     {
         if(!s_instance)
         {

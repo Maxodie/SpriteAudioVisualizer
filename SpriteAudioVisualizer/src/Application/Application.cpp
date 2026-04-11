@@ -83,7 +83,7 @@ void Application::Run()
 
         if(m_dt > 1.f)
         {
-            // m_dt = 1.f / 60.f;
+            m_dt = 1.f / 60.f;
         }
         m_beginTicks = m_endTicks;
     }

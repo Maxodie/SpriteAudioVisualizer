@@ -18,7 +18,7 @@ public:
         return m_stream != nullptr;
     }
 
-    PT_FORCE_INLINE std::string GetName() const
+    PT_FORCE_INLINE std::string_view GetName() const
     {
         return m_deviceInfo->name;
     }
@@ -34,7 +34,11 @@ public:
         {
             PaError err = Pa_ReadStream(m_stream, static_cast<void*>(m_inputBuffer), m_framePerBuffer);
             //input overflowed can appear when the app is shutdown or if the result is glitched
-            PT_CORE_ASSERT(err == paNoError || err == paInputOverflowed, "error portaudio : %s", Pa_GetErrorText(err));
+            if(err != paNoError && err != paInputOverflowed)
+            {
+                CORE_LOG_ERROR("error portaudio : %s", Pa_GetErrorText(err));
+                return nullptr;
+            }
 
             return m_inputBuffer;
         }
@@ -108,7 +112,7 @@ public:
         m_devices[id].StopStream();
     }
 
-    PT_FORCE_INLINE std::string GetDevice(int32_t id)
+    PT_FORCE_INLINE std::string_view GetDevice(int32_t id)
     {
         PT_CORE_ASSERT(m_devices.size() > id, "Trying to get an out of bound id device");
         return m_devices[id].GetName();
