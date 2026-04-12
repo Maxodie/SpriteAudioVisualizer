@@ -8,6 +8,10 @@
 #include "Renderer/Renderer.hpp"
 #include <chrono>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 namespace PT
 {
 
@@ -23,6 +27,9 @@ Application::~Application()
 
 void Application::Init()
 {
+#ifdef _WIN32
+    SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+#endif
     m_isRunning = true;
 
     GraphicsContext::Init();

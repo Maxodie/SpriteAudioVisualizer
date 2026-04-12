@@ -27,6 +27,10 @@ void MicSelection::UpdateGUI()
     {
         PT::Microphone& mic = PT::Microphone::Get();
 
+#ifdef PT_EDITOR
+        ImGui::Text("with Editor version");
+#endif
+
         if(ImGui::BeginChild("Entity Hierarchy"))
         {
             for(size_t i = 0; i < mic.GetDeviceNum(); ++i)
